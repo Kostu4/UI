@@ -13,11 +13,11 @@ public class LashStrike : MonoBehaviour
     private PlagueBar plagueBar;
     private bool isOnCooldown = false;
 
-    private NEW_HealthBar healthBar;
+    private HealthBar healthBar;
 
     private void Start()
     {
-        healthBar = FindObjectOfType<NEW_HealthBar>();
+        healthBar = FindObjectOfType<HealthBar>();
         plagueBar = FindObjectOfType<PlagueBar>();
         abilityImage.fillAmount = 1;
     }

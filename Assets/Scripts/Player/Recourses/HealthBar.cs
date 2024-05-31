@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NEW_HealthBar : MonoBehaviour
+public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Slider healthBar; // Слайдер для отображения порчи
     [SerializeField] private TMP_Text healthText; // Текст для отображения порчи
@@ -52,8 +52,7 @@ public class NEW_HealthBar : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth - amount < 0)
         { 
-            currentHealth = 0;
-            Debug.LogWarning("YOU ARE DEAD");
+            currentHealth = 1;
         } 
         UpdateHealthUI();
     }

@@ -12,14 +12,14 @@ public class PlagueBar : MonoBehaviour
 
     private float currentPlague;
 
-    private NEW_HealthBar healthBar;
+    private HealthBar healthBar;
 
     public float CurrentPlague => currentPlague;
     public float MaxPlague => maxPlague;
 
     private void Start()
     {
-        healthBar = FindObjectOfType<NEW_HealthBar>();
+        healthBar = FindObjectOfType<HealthBar>();
         currentPlague = maxPlague;
         plagueSlider.maxValue = maxPlague;
         UpdatePlagueUI();
@@ -30,8 +30,9 @@ public class PlagueBar : MonoBehaviour
     {
         while (true)
         {
-            if (healthBar.CurrentHealth <= 0)
-            { 
+            if (healthBar.CurrentHealth < 0)
+            {
+                Debug.LogWarning("entered");
                 yield break;
             }
             if (currentPlague < maxPlague)
