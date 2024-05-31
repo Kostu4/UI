@@ -1,37 +1,60 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class NEW_HealthBar : MonoBehaviour
 {
-    [SerializeField] private Slider healthBar;
-    [SerializeField] private TMP_Text healthBarText;
-    [SerializeField] private bool isDead = false;
+    [SerializeField] private Slider healthBar; // Слайдер для отображения порчи
+    [SerializeField] private TMP_Text healthText; // Текст для отображения порчи
     [SerializeField] private Image fillBar;
     [SerializeField] private Gradient changeColor;
+    [SerializeField] private float healthRegenRate = 3f; // Скорость восстановления порчи (ед/сек)
+    [SerializeField] private float maxHealth = 100f; // Максимальное количество порчи
 
-    private void Awake()
+    private float currentHealth;
+    public float CurrentHealth => currentHealth;
+    public float MaxPlague => maxHealth;
+
+    private void Start()
     {
-        healthBar.value = healthBar.maxValue;
-        healthBarText.text = healthBar.value.ToString();
+        currentHealth = maxHealth;
+        healthBar.maxValue = maxHealth;
         fillBar.color = changeColor.Evaluate(1f);
-        StartCoroutine(UpdateHealthBar());
+        UpdateHealthUI();
+        StartCoroutine(RegenHealth());
     }
-    IEnumerator UpdateHealthBar()
+
+    private IEnumerator RegenHealth()
     {
-        Debug.Log("Coroutine is running");
-        while (isDead!=true)
+        while (currentHealth >0)
         {
-            if (healthBar.value <= healthBar.minValue)
+            if (currentHealth < maxHealth)
             {
-                isDead = true;
-                Debug.LogWarning("YOU ARE DIED");
+                currentHealth += healthRegenRate * Time.deltaTime;
+                currentHealth = Mathf.Min(currentHealth, maxHealth);
+                UpdateHealthUI();
             }
-            healthBarText.text = healthBar.value.ToString() + " / " + healthBar.maxValue.ToString();
-            fillBar.color = changeColor.Evaluate(healthBar.normalizedValue);
             yield return null;
         }
+    }
+
+    private void UpdateHealthUI()
+    {
+        healthBar.value = currentHealth;
+        fillBar.color = changeColor.Evaluate(healthBar.normalizedValue);
+        healthText.text = Mathf.FloorToInt(currentHealth).ToString() + " / " + healthBar.maxValue;
+    }
+
+    public void ConsumeHealth(float amount)
+    {
+        currentHealth -= amount;
+        if (currentHealth - amount < 0)
+        { 
+            currentHealth = 0;
+            Debug.LogWarning("YOU ARE DEAD");
+        } 
+        UpdateHealthUI();
     }
 }
